@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ChronoTask - Pomodoro Studio & Task Workspace</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:text-white">
+
+        <header class="bg-slate-900 border-b border-slate-800/80 px-4 sm:px-8 py-4 flex items-center justify-between flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-black shadow-lg shadow-indigo-600/30">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm sm:text-base font-extrabold text-white tracking-tight flex items-center gap-2">
+                        ChronoTask
+                        <span class="text-[10px] bg-indigo-500/20 text-indigo-300 font-semibold px-2.5 py-0.5 rounded-full border border-indigo-500/30 uppercase tracking-wider">Studio</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Pomodoro Timer, Task Flow & Ambient Audio</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button id="ambient-btn" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold rounded-xl border border-slate-700/60 transition flex items-center gap-2 cursor-pointer shadow-sm">
+                    <i id="ambient-icon" class="fa-solid fa-volume-xmark text-slate-400"></i>
+                    <span class="hidden sm:inline">Ambient Rain</span>
+                </button>
+                <div class="hidden md:flex items-center gap-2 bg-slate-700/40 text-xs font-mono text-slate-300">
+                    <i class="fa-solid fa-fire text-amber-400"></i>
+                    <span id="streak-counter">0m focused today</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+            <section class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10 flex flex-col items-center shadow-xl relative overflow-hidden timer-pulse">
+                <div class="bg-slate-950 p-1.5 rounded-2xl border border-slate-800/80 flex gap-1 mb-8 w-full max-w-sm">
+                    <button id="mode-work" onclick="setMode('work')" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-indigo-600 text-white transition shadow-sm cursor-pointer">
+                        Focus (25m)
+                    </button>
+                    <button id="mode-short" onclick="setMode('short')" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-white transition cursor-pointer">
+                        Short Break (5m)
+                    </button>
+                    <button id="mode-long" onclick="setMode('long')" class="flex-1 py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-white transition cursor-pointer">
+                        Long Break (15m)
+                    </button>
+                </div>
+
+                <div class="my-6 text-center">
+                    <div id="timer-display" class="font-mono text-7xl sm:text-9xl font-black tracking-tight text-white drop-shadow-md">
+                        25:00
+                    </div>
+                    <p id="timer-status" class="text-xs sm:text-xs font-medium text-slate-400 mt-2">Ready to focus & build something awesome</p>
+                </div>
+
+                <div class="flex items-center gap-4 mt-4 w-full max-w-xs">
+                    <button id="start-pause-btn" onclick="toggleTimer()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-extrabold text-sm sm:text-base py-4 rounded-2xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2.5 cursor-pointer">
+                        <i id="play-icon" class="fa-solid fa-play"></i>
+                        <span id="start-pause-text">Start Timer</span>
+                    </button>
+                    <button onclick="resetTimer()" class="px-5 py-4 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 hover:text-white font-bold rounded-2xl border border-slate-700 transition flex items-center justify-center cursor-pointer">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
+
+                <div class="mt-8 flex items-center gap-2 text-xs text-slate-500 font-medium">
+                    <i class="fa-solid fa-circle-chek text-emerald-500 font-medium"></i>
+                    <span>Completed sessions today: <strong id="session-count" class="text-slate-300">0</strong></span>
+                </div>
+            </section>
+
+            <section class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col shadow-xl h-full min-h-[440px]">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-indigo-400"></i>
+                        Active Task Flow
+                    </h2>
+                    <span id="task-badge" class="text-[11px] font-mono font-semibold bg-slate-800 text-slate-400 px-2.5 py-0.5 rounded-full">0 remaining</span>
+                </div>
+
+                <form id="task-form" class="flex gap-2 mb-4">
+                    <input
+                    type="text"
+                    id="task-input"
+                    placeholder="What are you focusing on?"
+                    class="flex-1 bg-slate-950 text-slate-200 text-xs sm:text-sm px-4 py-3 rounded-2xl border border-slate-800 focus:outline-none focus:ring-2 focus:rign-indigo-500 transition font-medium"
+                    autocomplete="off"
+                    />
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-3 rounded-2xl transition flex items-center justify-center cursor-pointer">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                    </button>
+                </form>
+
+                <ul id="task-list" class="flex-1 overflow-y-auto space-y-2.5 max-h-[280px] pr-1">
+
+                </ul>
+
+                <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500 font-medium">
+                   <span id="task-hint">Click task to toggle</span>
+                   <button onclick="clearCompletedTask()" class="hover:text-red-400 transition cursor-pointer">Clear Completed</button> 
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-slate-900 border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-500">
+            ChronoTask Studio &bull; Built for clean productivity and verified hours
+        </footer>
+
+        <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 border border-slate-700 text-white text-xs px-4 py-3 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2.5 font-semibold z-50">
+            <i class="fa-solid fa-bell text-indigo-400"></i>
+            <span id="toast-msg">Session completed! Take a break.</span>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>
