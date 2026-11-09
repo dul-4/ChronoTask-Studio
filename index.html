@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="mt-8 flex items-center gap-2 text-xs text-slate-500 font-medium">
-                    <i class="fa-solid fa-circle-chek text-emerald-500 font-medium"></i>
+                    <i class="fa-solid fa-circle-check text-emerald-500 font-medium"></i>
                     <span>Completed sessions today: <strong id="session-count" class="text-slate-300">0</strong></span>
                 </div>
             </section>
@@ -88,7 +88,7 @@
                     type="text"
                     id="task-input"
                     placeholder="What are you focusing on?"
-                    class="flex-1 bg-slate-950 text-slate-200 text-xs sm:text-sm px-4 py-3 rounded-2xl border border-slate-800 focus:outline-none focus:ring-2 focus:rign-indigo-500 transition font-medium"
+                    class="flex-1 bg-slate-950 text-slate-200 text-xs sm:text-sm px-4 py-3 rounded-2xl border border-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition font-medium"
                     autocomplete="off"
                     />
                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-3 rounded-2xl transition flex items-center justify-center cursor-pointer">
@@ -102,7 +102,7 @@
 
                 <div class="pt-3 mt-3 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500 font-medium">
                    <span id="task-hint">Click task to toggle</span>
-                   <button onclick="clearCompletedTask()" class="hover:text-red-400 transition cursor-pointer">Clear Completed</button> 
+                   <button onclick="clearCompletedTasks()" class="hover:text-red-400 transition cursor-pointer">Clear Completed</button> 
                 </div>
             </section>
         </main>
